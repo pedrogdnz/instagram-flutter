@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:instagram/models/story.dart';
 
 class StoryItem extends StatelessWidget {
-  const StoryItem({super.key, required this.texto});
-  final String texto;
+  const StoryItem({super.key, required this.story});
+  final Story story;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.inversePrimary,
-          shape: BoxShape.circle,
+      child: ListTile(
+        title: Text(story.titulo),
+        subtitle: Text(story.texto),
+        leading: Icon(
+          story.liked ? Icons.favorite : Icons.favorite_border,
+          color: story.liked ? Colors.amber : null,
         ),
-        child: Center(child: Text(texto, style: const TextStyle(fontSize: 20))),
+        tileColor: Theme.of(context).colorScheme.primaryContainer,
+        contentPadding: const EdgeInsets.all(6.0),
+        titleTextStyle: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/models/post.dart';
+import 'package:instagram/models/story.dart';
 import 'package:instagram/views/add_post.dart';
 import 'package:instagram/views/post_item.dart';
 import 'package:instagram/views/story_item.dart';
@@ -12,12 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Post> _posts = [
-    Post(titulo: "Pedro", texto: "Guerreiro Nato", curtido: true),
-    Post(titulo: "Nicole", texto: "Burrinha", curtido: false),
-  ];
+  final List<Post> _posts = [];
 
-  final List _stories = ['story 1', 'story 2', 'story 3', 'story 4'];
+  final List<Story> _stories = [
+    Story(titulo: "Viagem", texto: "Fui para a praia", liked: true),
+    Story(titulo: "Comida", texto: "Comi um lanche", liked: false),
+    Story(titulo: "Estudo", texto: "Estudei Flutter", liked: true),
+    Story(titulo: "Trabalho", texto: "Trabalhei muito", liked: false),
+    Story(titulo: "Esporte", texto: "Joguei futebol", liked: true),
+    Story(titulo: "Música", texto: "Ouvi rock", liked: false),
+    Story(titulo: "Cinema", texto: "Assisti um filme", liked: true),
+    Story(titulo: "Natureza", texto: "Fiz uma trilha", liked: false),
+    Story(titulo: "Arte", texto: "Pintei um quadro", liked: true),
+    Story(titulo: "Tecnologia", texto: "Comprei um gadget novo", liked: false),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               scrollDirection: Axis.horizontal,
               itemCount: _stories.length,
               itemBuilder: (context, index) {
-                return StoryItem(texto: _stories[index]);
+                return StoryItem(story: _stories[_stories.length - index - 1]);
               },
             ),
           ),
@@ -40,7 +49,11 @@ class _HomePageState extends State<HomePage> {
             child: ListView.builder(
               itemCount: _posts.length,
               itemBuilder: (context, index) {
-                return PostItem(post: _posts[_posts.length - 1 - index]);
+                return PostItem(
+                  post: _posts[_posts.length - 1 - index],
+                  deleteItem: () => deletePost(_posts.length - index - 1),
+                  likeItem: () => curtirPost(_posts.length - index - 1),
+                );
               },
             ),
           ),
@@ -61,5 +74,17 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  curtirPost(int index) {
+    setState(() {
+      _posts[index].curtido = !_posts[index].curtido;
+    });
+  }
+
+  deletePost(int index) {
+    setState(() {
+      _posts.removeAt(index);
+    });
   }
 }
