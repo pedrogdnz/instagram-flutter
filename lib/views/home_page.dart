@@ -4,6 +4,7 @@ import 'package:instagram/models/story.dart';
 import 'package:instagram/views/add_post.dart';
 import 'package:instagram/views/post_item.dart';
 import 'package:instagram/views/story_item.dart';
+import 'package:instagram/views/add_story.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,35 +17,83 @@ class _HomePageState extends State<HomePage> {
   final List<Post> _posts = [];
 
   final List<Story> _stories = [
-    Story(titulo: "Viagem", texto: "Fui para a praia", liked: true),
-    Story(titulo: "Comida", texto: "Comi um lanche", liked: false),
-    Story(titulo: "Estudo", texto: "Estudei Flutter", liked: true),
-    Story(titulo: "Trabalho", texto: "Trabalhei muito", liked: false),
-    Story(titulo: "Esporte", texto: "Joguei futebol", liked: true),
-    Story(titulo: "Música", texto: "Ouvi rock", liked: false),
-    Story(titulo: "Cinema", texto: "Assisti um filme", liked: true),
-    Story(titulo: "Natureza", texto: "Fiz uma trilha", liked: false),
-    Story(titulo: "Arte", texto: "Pintei um quadro", liked: true),
-    Story(titulo: "Tecnologia", texto: "Comprei um gadget novo", liked: false),
+    Story(titulo: "Viagem", texto: "Praia", liked: true),
+    Story(titulo: "Comida", texto: "Lanche", liked: false),
+    Story(titulo: "Estudo", texto: "Flutter", liked: true),
+    Story(titulo: "Trabalho", texto: "Muito trabalho", liked: false),
+    Story(titulo: "Esporte", texto: "Futebol", liked: true),
+    Story(titulo: "Música", texto: "Rock", liked: false),
+    Story(titulo: "Cinema", texto: "Filme", liked: true),
+    Story(titulo: "Natureza", texto: "Trilha", liked: false),
+    Story(titulo: "Arte", texto: "Quadro", liked: true),
+    Story(titulo: "Tecnologia", texto: "Gadget", liked: false),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Derogram")),
-
       body: Column(
         children: [
           SizedBox(
-            height: 150,
+            height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: _stories.length,
+              itemCount: _stories.length + 1,
               itemBuilder: (context, index) {
-                return StoryItem(story: _stories[_stories.length - index - 1]);
+                if (index == 0) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddStory(),
+                              ),
+                            );
+                            if (result != null) {
+                              setState(() {
+                                _stories.add(result);
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.grey.shade300,
+                            ),
+                            child: const Icon(Icons.add, size: 35),
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          "Adicionar",
+                          style: TextStyle(fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                  child: StoryItem(
+                    story: _stories[_stories.length - index - 1],
+                  ),
+                );
               },
             ),
           ),
+
+          // Posts
           Expanded(
             child: ListView.builder(
               itemCount: _posts.length,
@@ -57,6 +106,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
+
           FloatingActionButton(
             onPressed: () async {
               final result = await Navigator.push(
@@ -76,15 +126,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  curtirPost(int index) {
+  void curtirPost(int index) {
     setState(() {
       _posts[index].curtido = !_posts[index].curtido;
     });
   }
 
-  deletePost(int index) {
+  void deletePost(int index) {
     setState(() {
       _posts.removeAt(index);
+    });
+  }
+
+  void curtirStory(int index) {
+    setState(() {
+      _stories[index].liked = !_stories[index].liked;
+    });
+  }
+
+  void deleteStory(int index) {
+    setState(() {
+      _stories.removeAt(index);
     });
   }
 }

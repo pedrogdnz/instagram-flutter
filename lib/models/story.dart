@@ -1,7 +1,7 @@
 class Story {
-  final String titulo;
-  final String texto;
-  final bool liked;
+  String titulo;
+  String texto;
+  bool liked;
 
   Story({required this.titulo, required this.texto, required this.liked});
 }
